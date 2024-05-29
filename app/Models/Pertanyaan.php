@@ -23,4 +23,9 @@ class Pertanyaan extends Model
     {
         return $this->belongsTo(DaftarPertanyaan::class);
     }
+
+    public function logNilai()
+    {
+        return $this->hasMany(LogNilai::class);
+    }
 }

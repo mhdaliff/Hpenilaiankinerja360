@@ -27,11 +27,6 @@ class BuatPenilaian extends Component
         'namaPenilaian' => '',
         'deskripsiPenilaian' => '',
         'maks-responden' => '10',
-        'metode' => '',
-        'atasan' => '40',
-        'sebaya' => '35',
-        'bawahan' => '25',
-        'diriSendiri' => '0',
         'mulai' => '',
         'selesai' => '',
     ];
@@ -48,6 +43,7 @@ class BuatPenilaian extends Component
         $this->daftarIdTimKerja = AnggotaTimKerja::where('user_id', $this->user->id)
             ->where('role', 'admin')
             ->pluck('tim_kerja_id');
+
         // Mengambil data tim kerja berdasarkan daftar ID tim kerja
         $this->daftarTimKerja = TimKerja::whereIn('id', $this->daftarIdTimKerja)->with('struktur')->get();
         // dd($this->daftarTimKerja);
@@ -112,22 +108,17 @@ class BuatPenilaian extends Component
         $this->showSuccesNotification = true;
 
         // Validasi total bobot penilaian
-        $totalBobot = $this->penilaian['atasan'] + $this->penilaian['sebaya'] + $this->penilaian['bawahan'] + $this->penilaian['diriSendiri'];
-        if ($totalBobot != 100) {
-            $this->addError('total_bobot_error', 'Total bobot penilaian harus 100 %.');
-        }
+        // $totalBobot = $this->penilaian['atasan'] + $this->penilaian['sebaya'] + $this->penilaian['bawahan'] + $this->penilaian['diriSendiri'];
+        // if ($totalBobot != 100) {
+        //     $this->addError('total_bobot_error', 'Total bobot penilaian harus 100 %.');
+        // }
 
         $this->validate([
             'penilaian.timKerja' => 'required', // Menjamin pemilihan tim kerja
             'penilaian.namaPenilaian' => 'required', // Menjamin nama penilaian diisi
             'penilaian.struktur' => 'required', // Menjamin deskripsi penilaian diisi
-            'penilaian.atasan' => 'required|numeric|min:0', // Menjamin bobot atasan adalah angka dan tidak negatif
-            'penilaian.sebaya' => 'required|numeric|min:0', // Menjamin bobot sebaya adalah angka dan tidak negatif
-            'penilaian.bawahan' => 'required|numeric|min:0', // Menjamin bobot bawahan adalah angka dan tidak negatif
-            'penilaian.diriSendiri' => 'required|numeric|min:0', // Menjamin bobot diri sendiri adalah angka dan tidak negatif
             'penilaian.mulai' => 'required|date', // Menjamin tanggal mulai diisi dan merupakan format tanggal yang valid
             'penilaian.selesai' => 'required|date|after:penilaian.mulai', // Menjamin tanggal selesai diisi, merupakan format tanggal yang valid, dan setelah tanggal mulai
-            'penilaian.metode' => 'required',
         ], [
             'penilaian.timKerja.required' => 'Tim Kerja harus dipilih.',
             'penilaian.namaPenilaian.required' => 'Nama Penilaian harus diisi.',
@@ -159,24 +150,11 @@ class BuatPenilaian extends Component
         $penilaian = Penilaian::create([
             'nama_penilaian' => $this->penilaian['namaPenilaian'],
             'struktur_id' => $this->penilaian['struktur'],
-            'jumlah_responden' => $this->penilaian['maks-responden'],
-            'metode' => $this->penilaian['metode'],
+            'maks_responden' => $this->penilaian['maks-responden'],
+            // 'metode' => $this->penilaian['metode'],
             'waktu_mulai' => $this->penilaian['mulai'],
             'waktu_selesai' => $this->penilaian['selesai'],
         ]);
-
-        // dd($penilaian->id);
-        // $dataPenilaian = Penilaian::where('nama_penilaian', $penilaian['nama_penilaian'])->where('struktur_id', $penilaian['struktur_id'])->get();
-        // dd($dataPenilaian);
-        if ($this->penilaian['metode'] == 'proporsional') {
-            $bobotPenilaian = BobotPenilaian::create([
-                'penilaian_id' => $penilaian->id,
-                'atasan' => $this->penilaian['atasan'],
-                'sebaya' => $this->penilaian['sebaya'],
-                'bawahan' => $this->penilaian['bawahan'],
-                'diri_sendiri' => $this->penilaian['diriSendiri'],
-            ]);
-        }
 
         foreach ($this->indikatorPenilaian as $indikator) {
             foreach ($indikator['pertanyaans'] as $pertanyaan) {
@@ -201,50 +179,44 @@ class BuatPenilaian extends Component
 
     private function addLogPenilaian($idPenilaian)
     {
+        $logPenilaianData = []; // Variabel untuk mengumpulkan data LogPenilaian
+
         $jabatanStruktur = JabatanStruktur::where('struktur_id', $this->penilaian['struktur'])->get();
         // dd($jabatanStruktur);
-
         foreach ($jabatanStruktur as $key => $jabatan) {
             $anggotaStruktur = AnggotaStruktur::where('jabatan_struktur_id', $jabatan->id)->with('anggotaTimKerja')->get();
-            // dd($anggotaStruktur);
 
             foreach ($anggotaStruktur as $a => $anggota) {
-                // Melakukan query untuk mencari penilai
                 $penilai_id = $anggota->anggotaTimKerja->user_id;
-                $penilai = User::where('id', $penilai_id)->get();
 
                 // BAWAHAN KE ATASAN
-                // Melaukan query untuk mencari jabatan penilai
-                $jabatanPenilai = JabatanStruktur::where('struktur_id', $this->penilaian['struktur'])->where('id', $anggota->jabatan_struktur_id)->get();
+                $jabatanPenilai = JabatanStruktur::where('struktur_id', $this->penilaian['struktur'])
+                    ->where('id', $anggota->jabatan_struktur_id)
+                    ->get();
 
                 foreach ($jabatanPenilai as $f => $jabPenilai) {
-                    // dd($jabPenilai->atasan);
                     if ($jabPenilai->atasan != null) {
-                        // Melakukan query untuk mencari jabatan yang merupakan atasan dari penilai
-                        $jabatanDinilai = JabatanStruktur::where('struktur_id', $this->penilaian['struktur'])->where('id', $jabPenilai->atasan)->get();
-                        // dd($jabatanDinilai);
+                        $jabatanDinilai = JabatanStruktur::where('struktur_id', $this->penilaian['struktur'])
+                            ->where('id', $jabPenilai->atasan)
+                            ->get();
+
                         foreach ($jabatanDinilai as $g => $jabDinilai) {
-                            // dd($jabDinilai);
                             $daftarDinilai = AnggotaStruktur::where('jabatan_struktur_id', $jabDinilai->id)->with('anggotaTimKerja')->get();
-                            // dd($daftarDinilai);
+
                             foreach ($daftarDinilai as $e => $dinilai) {
-                                // dd($dinilai->anggotaTimKerja);
-                                $LogPenilaian = LogPenilaian::create([
+                                $logPenilaianData[] = [
                                     'penilaian_id' => $idPenilaian,
                                     'penilai_id' => $penilai_id,
                                     'role_penilai' => 'bawahan',
                                     'dinilai_id' => $dinilai->anggotaTimKerja->user_id,
                                     'status' => 'belum',
-                                ]);
+                                ];
                             }
                         }
                     }
                 }
 
                 // SEBAYA
-                // Melakukan query untuk mencari daftar nama yang memiliki jabatan yang sama
-
-                // $atasan = JabatanStruktur::where('struktur_id',)
                 $jabatanPenilai = JabatanStruktur::where('struktur_id', $this->penilaian['struktur'])
                     ->where('id', $anggota->jabatan_struktur_id)
                     ->first();
@@ -252,71 +224,96 @@ class BuatPenilaian extends Component
                 $jabatanSebaya = JabatanStruktur::where('struktur_id', $this->penilaian['struktur'])
                     ->where('atasan', $jabatanPenilai->atasan)
                     ->get();
-                // dd($jabatanSebaya);
+
                 foreach ($jabatanSebaya as $d => $sebaya) {
                     $daftarDinilai = AnggotaStruktur::where('jabatan_struktur_id', $sebaya->id)->with('anggotaTimKerja')->get();
-                    // dd($daftarDinilai);
+
                     foreach ($daftarDinilai as $e => $dinilai) {
-                        // dd($dinilai->anggotaTimKerja);
-                        $status_penilai = ($penilai_id == $dinilai->anggotaTimKerja->user_id) ? 'diri sendiri' : 'sebaya';
-                        // dd($status_penilai);
-                        $LogPenilaian = LogPenilaian::create([
-                            'penilaian_id' => $idPenilaian,
-                            'penilai_id' => $penilai_id,
-                            'role_penilai' => $status_penilai,
-                            'dinilai_id' => $dinilai->anggotaTimKerja->user_id,
-                            'status' => 'belum',
-                        ]);
+                        if ($penilai_id == $dinilai->anggotaTimKerja->user_id) {
+                            $existingLog = collect($logPenilaianData)->where('penilai_id', $penilai_id)
+                                ->where('penilaian_id', $idPenilaian)
+                                ->where('dinilai_id', $dinilai->anggotaTimKerja->user_id)
+                                ->where('role_penilai', 'diri sendiri')
+                                ->isNotEmpty();
+
+                            // dd($existingLog);
+                            if (!$existingLog) {
+                                $logPenilaianData[] = [
+                                    'penilaian_id' => $idPenilaian,
+                                    'penilai_id' => $penilai_id,
+                                    'role_penilai' => 'diri sendiri',
+                                    'dinilai_id' => $dinilai->anggotaTimKerja->user_id,
+                                    'status' => 'belum',
+                                ];
+                            }
+                        } else {
+                            $logPenilaianData[] = [
+                                'penilaian_id' => $idPenilaian,
+                                'penilai_id' => $penilai_id,
+                                'role_penilai' => 'sebaya',
+                                'dinilai_id' => $dinilai->anggotaTimKerja->user_id,
+                                'status' => 'belum',
+                            ];
+                        }
                     }
                 }
 
                 // ATASAN KE BAWAHAN
-                // Melakukan query untuk mencari daftar nama bawahan yang dinilai
-                $daftarJabatanBawahan = JabatanStruktur::where('struktur_id', $this->penilaian['struktur'])->where('atasan', $anggota->jabatan_struktur_id)->get();
-                // dd($anggota->jabatan_struktur_id);
-                // dd($daftarJabatanBawahan);
+                $daftarJabatanBawahan = JabatanStruktur::where('struktur_id', $this->penilaian['struktur'])
+                    ->where('atasan', $anggota->jabatan_struktur_id)
+                    ->get();
+
                 foreach ($daftarJabatanBawahan as $b => $bawahan) {
                     $daftarDinilai = AnggotaStruktur::where('jabatan_struktur_id', $bawahan->id)->with('anggotaTimKerja')->get();
-                    foreach ($daftarDinilai as $c => $dinilai) {
 
-                        // dd($dinilai->anggotaTimKerja->user_id);
-                        $logPenilaian = LogPenilaian::create([
+                    foreach ($daftarDinilai as $c => $dinilai) {
+                        $logPenilaianData[] = [
                             'penilaian_id' => $idPenilaian,
                             'penilai_id' => $penilai_id,
-                            'dinilai_id' => $dinilai->anggotaTimKerja->user_id,
                             'role_penilai' => 'atasan',
+                            'dinilai_id' => $dinilai->anggotaTimKerja->user_id,
                             'status' => 'belum',
-                        ]);
+                        ];
                     }
-                    // dd($daftarDinilai);
                 }
-            };
-        };
+            }
+        }
+        // Kelompokkan data berdasarkan penilai_id
+        $groupedLogPenilaian = collect($logPenilaianData)->groupBy('penilai_id');
+        // dd($groupedLogPenilaian);
+        $maks_responden = $this->penilaian['maks-responden'];
 
-        // dd($anggotaStruktur);
-        // $anggotaStruktur = AnggotaStruktur::where()
-        // // Ambil semua user yang terlibat dalam penilaian
-        // $users = AnggotaTimKerja::where('tim_kerja_id', $this->penilaian['timKerja'])
-        //     ->whereIn('role', ['atasan', 'sebaya', 'bawahan'])
-        //     ->pluck('user_id');
+        $finalLogPenilaianData = [];
 
-        // // Buat log penilaian untuk setiap user
-        // foreach ($users as $user) {
-        //     LogPenilaian::create([
-        //         'penilai_id' => $this->user->id,
-        //         'dinilai_id' => $user,
-        //         'status_penilai' => $this->getRole($user),
-        //         'status' => 'belum', // Set status default menjadi belum
-        //     ]);
-        // }
+        foreach ($groupedLogPenilaian as $penilai_id => $logPenilaian) {
+            // dd($logPenilaian);
+            // Pisahkan log dengan role_penilai 'diri sendiri'
+            $diriSendiriLog = $logPenilaian->where('role_penilai', 'diri sendiri');
+            $otherLogs = $logPenilaian->where('role_penilai', '!=', 'diri sendiri');
+            // Jika jumlah log melebihi maks_responden
+            if ($logPenilaian->count() > $maks_responden) {
+                // Jika log 'diri sendiri' ada, pastikan termasuk dalam sampel
+                if ($diriSendiriLog->isNotEmpty()) {
+                    // Ambil sampel acak dari log lainnya
+                    $otherLogs = $otherLogs->shuffle()->take($maks_responden - 1);
+                    // Gabungkan log 'diri sendiri' dengan sampel acak lainnya
+                    $logPenilaian = $diriSendiriLog->concat($otherLogs);
+                } else {
+                    // Jika tidak ada log 'diri sendiri', cukup ambil sampel acak sebanyak maks_responden
+                    $logPenilaian = $logPenilaian->shuffle()->take($maks_responden);
+                }
+            }
+
+            // Gabungkan data yang sudah difilter ke dalam array finalLogPenilaianData
+            $finalLogPenilaianData = array_merge($finalLogPenilaianData, $logPenilaian->toArray());
+        }
+
+        // dd($finalLogPenilaianData);
+        // Batch insert data LogPenilaian ke dalam database
+        LogPenilaian::insert($finalLogPenilaianData);
     }
 
-    private function getRole($userId)
-    {
-        // Ambil peran pengguna berdasarkan id pengguna
-        // Misalnya, Anda memiliki logika untuk menentukan peran pengguna
-        // di sini dan kembalikan peran pengguna.
-    }
+
 
     private function resetPenilaianData()
     {

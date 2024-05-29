@@ -31,13 +31,11 @@
                                 <div class="col-12 col-md-12 px-6 mb-5"> 
                                     <div class="progress-wrapper">
                                         <div class="progress-info">
-                                        <div class="progress-percentage">
-                                            <span class="text-sm font-weight-bold">{{$dataNilai['persen']}}%</span>
+                                            <div class="progress-percentage">
+                                                <span class="text-sm font-weight-bold">{{$dataNilai['persen']}}%</span>
+                                            </div>
                                         </div>
-                                        </div>
-                                        <div class="progress">
-                                        <div class="progress-bar bg-gradient-primary" role="progressbar" aria-valuenow="{{$dataNilai['persen']}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$dataNilai['persen']}}%;"></div>
-                                        </div>
+                                        <x-progress-bar :percentage="$dataNilai['persen']" class=""/>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-12 px-6 mb-4">
@@ -111,7 +109,6 @@
                                                     @else
                                                     <img src="../assets/img/team-4.jpg" alt="Default Image" class="avatar avatar-sm me-3">
                                                     @endif
-                                                    {{-- <img src="{{$Penilai['penilai']->photo_path}}" class="avatar avatar-sm me-3"> --}}
                                                   </div>
                                                   <div class="d-flex flex-column justify-content-center">
                                                     <h6 class="mb-0 text-xs">{{$Penilai['penilai']->name}}</h6>
@@ -124,12 +121,8 @@
                                             </td>
                                             <td class="align-middle text-center">
                                                 <div class="d-flex align-items-center">
-                                                  <span class="me-2 text-xs">{{ $Penilai->persen }} %</span>
-                                                  <div>
-                                                    <div class="progress">
-                                                      <div class="progress-bar bg-info" role="progressbar" aria-valuenow="{{ $Penilai->persen }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ $Penilai->persen }}%;"></div>
-                                                    </div>
-                                                  </div>
+                                                    <x-progress-bar :percentage="$Penilai->persen" class="" />
+                                                    <span class="me-2 text-xs px-2">{{ $Penilai->persen }} %</span>
                                                 </div>
                                               </td>
                                         </tr>
@@ -163,8 +156,8 @@
                 labels: ['Belum', 'Sudah'],
                 datasets: [{
                     data: [jumlahBelumMenilai, jumlahSudahMenilai],
-                    backgroundColor: ['#ea0606', '#82d616'],
-                    hoverBackgroundColor: ['#ea0606', '#82d616'],
+                    backgroundColor: ['rgb(255,49,49)', 'rgb(130,214,22)'],
+                    hoverBackgroundColor: ['rgba(255,49,49,0.8)', 'rgba(130,214,22,0.8)'],
                     borderWidth: 3
                 }]
             },

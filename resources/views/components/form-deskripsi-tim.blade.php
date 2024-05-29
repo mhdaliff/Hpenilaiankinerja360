@@ -5,7 +5,7 @@
         <input wire:model="namaTimKerja" type="text" class="form-control" id="namaTimKerja">
     </div>
     <div class="col-12 mb-4">
-        <label for="deskripsiTimKerja" class="form-label">Deskripsi Tim</label>
+        <label for="deskripsiTimKerja" class="form-label">Deskripsi Tim <span>(opsional)</span></label>
         <textarea wire:model="deskripsiTimKerja" class="form-control" id="deskripsiTimKerja" aria-label="Dengan textarea"></textarea>
     </div>
     <div class="col-12 mb-3">
@@ -14,7 +14,7 @@
 
     <!-- Upload EXCEL -->
     @include('components.impor')
-
+    
 
     <!-- Looping untuk mengambil anggota tim kerja yang diimpor -->
     @foreach ($anggotaTimKerja as $key => $anggota)

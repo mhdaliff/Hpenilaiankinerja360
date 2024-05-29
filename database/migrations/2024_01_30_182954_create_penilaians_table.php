@@ -15,8 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama_penilaian');
             $table->foreignId('struktur_id')->constrained();
-            $table->integer('jumlah_responden');
-            $table->enum('metode', ['aritmatika', 'proporsional'])->default('aritmatika');
+            $table->integer('maks_responden');
             $table->date('waktu_mulai');
             $table->date('waktu_selesai');
             $table->timestamps();

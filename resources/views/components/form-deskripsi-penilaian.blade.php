@@ -48,7 +48,7 @@
           <label for="beban-responden" class="form-label">Beban responden maksimal</label>
           <div class="row">
             <div class="col-12 col-md-6">
-              <input wire:model="penilaian.maks-responden" type="number" min="0" class="form-control" id="beban-responden">
+              <input wire:model="penilaian.maks-responden" type="number" min="2" class="form-control" id="beban-responden">
             </div>
             <div class="col-12 col-md-6">
               <p><small>responden </small></p>
@@ -56,38 +56,6 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="col-12 col-md-12 px-3">
-      <h6 class="text-center">Metode Penentuan Nilai Akhir</h6>
-      <div class="row">
-        <div class="col-md-12 mb-2">
-          <label for="metode" class="form-label">Metode</label>
-          <select wire:model="penilaian.metode" class="form-select" id="metode">
-              <option value="aritmatika" selected>Aritmatika</option>
-              <option value="proporsional">Proporsional</option>
-          </select>
-        </div>
-      </div>
-      @if ($penilaian['metode'] == 'proporsional')
-        <div class="row">
-          <div class="col-md-3">
-            <label for="atasan" class="form-label">Atasan</label>
-            <input wire:model="penilaian.atasan" type="number" min="0" class="form-control" id="atasan">
-          </div>
-          <div class="col-md-3">
-            <label for="sebaya" class="form-label">Sebaya</label>
-            <input wire:model="penilaian.sebaya" type="number" min="0" class="form-control" id="sebaya">
-          </div>
-          <div class="col-md-3">
-            <label for="bawahan" class="form-label">Bawahan</label>
-            <input wire:model="penilaian.bawahan" type="number" min="0" class="form-control" id="bawahan">
-          </div>
-          <div class="col-md-3">
-            <label for="diriSendiri" class="form-label">Diri Sendiri</label>
-            <input wire:model="penilaian.diriSendiri" type="number" min="0" class="form-control" id="diriSendiri">
-          </div>
-        </div>
-      @endif
     </div>
   </div>
 </div>

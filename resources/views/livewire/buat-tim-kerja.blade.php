@@ -80,5 +80,10 @@
         window.addEventListener('swal:success', event => {
             swal("Success", event.detail.message, "success");
         });
+
+        // Listening for the "swal:warning" event
+        window.addEventListener('swal:warning', event => {
+            swal("Warning", event.detail.message, "warning");
+        });
     });
 </script>

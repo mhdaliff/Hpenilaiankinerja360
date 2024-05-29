@@ -17,7 +17,7 @@
                             <h4 class=" font-weight-bolder">{{$infoTimKerja['nama_tim']}}</h4>
                         </div>
                         @if ($userRole == 'admin')
-                            <a href="/edit-tim-kerja/{{$idTimKerja}}" class="btn bg-gradient-primary btn-sm position-absolute top-0 end-0" type="button">Edit Tim</a>
+                            <a href="/edit-tim-kerja/{{$idTimKerja}}" class="btn bg-gradient-primary btn-sm position-absolute top-0 end-0 d-none d-md-inline-block" type="button">Edit Tim</a>
                         @endif
                     </div>
                 </div>

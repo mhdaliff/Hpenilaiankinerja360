@@ -5,7 +5,7 @@
             aria-hidden="true" id="iconSidenav"></i>
         <a class="align-items-center d-flex m-0 navbar-brand text-wrap" href="{{ route('dasbor') }}">
             <img src="../assets/img/360degree.png" class="navbar-brand-img h-100" alt="...">
-            <span class="ms-3 font-weight-bold">Penilaian Kinerja 360 Derajat</span>
+            <span class="ms-3 font-weight-bold">Umpan Balik 360 Derajat</span>
         </a>
     </div>
     <hr class="horizontal dark mt-0">
@@ -40,7 +40,7 @@
                 </a>
             </li>
             <li class="nav-item pb-2">
-                <a class="nav-link {{ Route::currentRouteName() == 'tim-kerja' ? 'active' : '' }}"
+                <a class="nav-link {{ Route::currentRouteName() == 'tim-kerja' || Route::currentRouteName() == 'buat-tim-kerja' || Route::currentRouteName() == 'detail-tim-kerja' || Route::currentRouteName() == 'edit-tim-kerja' || Route::currentRouteName() == 'buat-struktur' ? 'active' : '' }}"
                     href="{{ route('tim-kerja') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -71,7 +71,7 @@
                 </a>
             </li>
             <li class="nav-item pb-2">
-                <a class="nav-link {{ Route::currentRouteName() == 'penilaian' ? 'active' : '' }}"
+                <a class="nav-link {{ Route::currentRouteName() == 'penilaian' || Route::currentRouteName() == 'buat-penilaian' || Route::currentRouteName() == 'detail-penilaian' || Route::currentRouteName() == 'nilai' ? 'active' : '' }}"
                     href="{{ route('penilaian') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -85,7 +85,7 @@
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Menu Admin</h6>
             </li>
             <li class="nav-item pb-2">
-                <a class="nav-link {{ Route::currentRouteName() == 'monitoring' ? 'active' : '' }}"
+                <a class="nav-link {{ Route::currentRouteName() == 'monitoring' || Route::currentRouteName() == 'detail-monitoring' ? 'active' : '' }}"
                     href="{{ route('monitoring') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -113,7 +113,7 @@
                 </a>
             </li>
             <li class="nav-item pb-2">
-                <a class="nav-link {{ Route::currentRouteName() == 'hasil-penilaian' ? 'active' : '' }}"
+                <a class="nav-link {{ Route::currentRouteName() == 'hasil-penilaian' || Route::currentRouteName() == 'detail-hasil-penilaian' ? 'active' : '' }}"
                     href="{{ route('hasil-penilaian') }}">
                     <div
                         class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">

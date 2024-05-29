@@ -14,27 +14,34 @@
                             <div class="container-fluid text-center">
                                 <h5 class="mb-0 font-weight-bolder">Daftar Tim Kerja</h5>
                             </div>
-                            <a href="{{ route('buat-tim-kerja')}}" class="btn bg-gradient-primary btn-sm position-absolute top-0 end-0" type="button">+&nbsp; Buat Tim</a>
+                            {{-- <a href="{{ route('buat-tim-kerja')}}" class="btn bg-gradient-primary btn-sm position-absolute top-0 end-0" type="button">+&nbsp; Buat Tim</a> --}}
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="row">
+                        <div class="row d-flex flex-wrap">
                             @foreach ($daftarTimKerja as $timKerja)
-                            <div class="col-md-3 px-3 pt-3 pb-3 sidenav-footer">
-                                <div class="card card-background shadow-none card-background-mask-danger" id="sidenavCard">
+                            @php
+                                $deskripsi = $timKerja->deskripsi_tim;
+                                $words = explode(' ', $deskripsi);
+                                if (count($words) > 8) {
+                                    $deskripsi = implode(' ', array_slice($words, 0, 6)) . ' ...';
+                                }
+                            @endphp
+                            <div class="col-md-3 px-3 pt-3 pb-3 sidenav-footer d-flex">
+                                <div class="card card-background move-on-hover shadow-none card-background-mask-danger flex-grow-1" id="sidenavCard">
                                     <div class="full-background" style="background-image: url('../assets/img/curved-images/white-curved.jpeg')">
                                     </div>
-                                    <div class="card-body pt-2">
-                                        <div class="row">
+                                    <div class="card-body pt-2 d-flex flex-column">
+                                        <div class="row mb-auto">
                                             <div class="col-md-12 text-end mb-0">
-
                                             </div>
                                             <span class="text-white text-uppercase text-sm font-weight-bold my-2">Tim Kerja</span>
                                             <a href="/tim-kerja/{{$timKerja->id}}" class="card-title h4 d-block text-white mb-3">
                                                 {{ $timKerja->nama_tim }}
                                             </a>
-                                            <p class="text-white card-description mb-4">{{ $timKerja->deskripsi_tim }}
-                                            </p>
+                                            <p class="text-white card-description mb-4">{{ $deskripsi }}</p>
+                                        </div>
+                                        <div class="mt-auto">
                                             <p class="text-white text-sm text-uppercase font-weight-bold">
                                                 <small>{{$timKerja->anggota_tim_kerja_count}} Orang Anggota</small>   
                                             </p>
@@ -44,6 +51,22 @@
                                 </div>
                             </div>
                             @endforeach
+                            <div class="col-md-3 px-3 pt-3 pb-3 sidenav-footer d-flex">
+                                <a href="{{ route('buat-tim-kerja')}}" class="w-100">
+                                    <div class="card card-background move-on-hover flex-grow-1">
+                                        <div class="card-body pt-5 d-flex flex-column">
+                                            <div class="row pt-6 pb-6 mb-auto">
+                                                <div class="col-md-12 text-center">
+                                                    <h4 class="text-white">Buat tim kerja baru</h4>
+                                                </div>
+                                                <div class="col-md-12 text-center">
+                                                    <i class="ni ni-fat-add fa-2x mb-0 text-center justify-content-center align-items-center" style="color: #ffffff;"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

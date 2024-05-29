@@ -13,7 +13,7 @@ class Penilaian extends Model
     protected $fillable = [
         'nama_penilaian',
         'struktur_id',
-        'jumlah_responden',
+        'maks_responden',
         'metode',
         'waktu_mulai',
         'waktu_selesai',

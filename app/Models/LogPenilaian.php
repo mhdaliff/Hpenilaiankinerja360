@@ -26,4 +26,9 @@ class LogPenilaian extends Model
     {
         return $this->belongsTo(User::class, 'dinilai_id');
     }
+
+    public function logNilai()
+    {
+        return $this->hasMany(LogNilai::class);
+    }
 }

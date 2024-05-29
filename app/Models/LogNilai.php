@@ -22,6 +22,6 @@ class LogNilai extends Model
 
     public function pertanyaan()
     {
-        return $this->belongsTo(Pertanyaan::class);
+        return $this->belongsTo(Pertanyaan::class, 'pertanyaans_id');
     }
 }

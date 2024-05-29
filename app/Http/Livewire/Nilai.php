@@ -2,13 +2,15 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\DaftarPertanyaan;
 use App\Models\User;
 use Livewire\Component;
+use App\Models\LogNilai;
 use App\Models\Pertanyaan;
 use App\Models\LogPenilaian;
 
+use App\Models\DaftarPertanyaan;
 use function Laravel\Prompts\select;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class Nilai extends Component
 {
@@ -20,6 +22,7 @@ class Nilai extends Component
     public $infoDinilai;
     public $daftarPertanyaan = [];
     public $indikatorPenilaian = [];
+    public $errors = [];
 
     public function mount($id)
     {
@@ -78,69 +81,74 @@ class Nilai extends Component
 
     public function next()
     {
-        // Validasi jika halaman saat ini bukan halaman terakhir
-        if ($this->currentPage < $this->maxPage) {
-            $this->currentPage++;
+        if ($this->validatePage($this->currentPage)) {
+            if ($this->currentPage < $this->maxPage) {
+                $this->currentPage++;
+            }
         }
     }
 
     public function back()
     {
-        // Validasi jika halaman saat ini bukan halaman pertama
         if ($this->currentPage > 1) {
             $this->currentPage--;
         }
     }
 
-    public function validateInputs()
+    public function validatePage($page)
     {
-        // Loop melalui semua indikator penilaian
-        foreach ($this->indikatorPenilaian as $indikator) {
-            // Loop melalui semua pertanyaan dalam indikator penilaian
-            foreach ($indikator[0] as $pertanyaan) {
-                // Jika nilai pertanyaan kosong, kembalikan false
-                if ($pertanyaan['nilai'] === '') {
-                    // Kirimkan pesan flash ke browser
-                    $this->dispatchBrowserEvent('alert', ['type' => 'error', 'message' => 'Harap isi semua nilai sebelum melanjutkan.']);
-                    return false;
-                }
+        $this->errors = [];
+        $currentIndikator = $this->indikatorPenilaian[$page - 1];
+
+        foreach ($currentIndikator[0] as $index => $pertanyaan) {
+            if ($pertanyaan['nilai'] === '') {
+                $this->errors[$index] = 'Nilai harus diisi.';
             }
         }
-        // Semua input telah divalidasi
+
+        if (!empty($this->errors)) {
+            // Alert::warning('Warning Title', 'Harap isi semua nilai sebelum melanjutkan.');
+            $this->dispatchBrowserEvent('swal:warning', ['message' => 'Harap isi semua nilai sebelum melanjutkan.']);
+            return false;
+        }
+
         return true;
     }
 
     public function save()
     {
-        // Validasi input sebelum menyimpan
         if (!$this->validateInputs()) {
             return;
         }
 
-        // Iterasi melalui semua indikator penilaian
         foreach ($this->indikatorPenilaian as $indikator) {
-            // Iterasi melalui semua pertanyaan dalam indikator penilaian
             foreach ($indikator[0] as $pertanyaan) {
-                // Buat instance LogNilai
-                $logNilai = new \App\Models\LogNilai();
-                // Set atribut-atribut log_nilai
+                $logNilai = new LogNilai();
                 $logNilai->log_penilaian_id = $this->idLogPenilaian;
                 $logNilai->pertanyaans_id = $pertanyaan['daftar_pertanyaan_id'];
                 $logNilai->nilai = $pertanyaan['nilai'];
-                // Simpan record log_nilai ke database
                 $logNilai->save();
             }
         }
-
-        // Ubah status log_penilaian menjadi 'sudah'
         $logPenilaian = LogPenilaian::find($this->idLogPenilaian);
         $logPenilaian->status = 'sudah';
         $logPenilaian->save();
 
-        toast('Nilai berhasil disimpan', 'success');
+        // toast('Penilaian berhasil', 'success');
+        Alert::success('Berhasil', 'Kuesioner penilaian berhasil disimpan!');
 
-        // Redirect ke halaman detail penilaian
         return redirect()->route('detail-penilaian', ['id' => $this->idPenilaian]);
+    }
+
+    public function validateInputs()
+    {
+        foreach ($this->indikatorPenilaian as $page => $indikator) {
+            if (!$this->validatePage($page + 1)) {
+                $this->currentPage = $page + 1;
+                return false;
+            }
+        }
+        return true;
     }
 
 

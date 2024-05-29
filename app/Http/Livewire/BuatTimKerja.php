@@ -13,10 +13,13 @@ use App\Models\AnggotaTimKerja;
 use App\Models\JabatanStruktur;
 use App\Models\DaftarPertanyaan;
 use App\Models\IndikatorPenilaian;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\ImporAnggotaTimKerja;
+use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class BuatTimKerja extends Component
 {
@@ -160,7 +163,14 @@ class BuatTimKerja extends Component
     }
 
 
-    // STEP 1
+    public function exportTemplate()
+    {
+        $templatePath = 'public/templates/template_anggota_tim_kerja.xlsx';
+        $templateFile = Storage::path($templatePath);
+        dd($templateFile);
+
+        return response()->download($templateFile, 'template_anggota_tim_kerja.xlsx');
+    }
 
     public function imporExcel()
     {
@@ -172,23 +182,28 @@ class BuatTimKerja extends Component
         $impor = new ImporAnggotaTimKerja;
         $data = Excel::toCollection($impor, $this->file->getRealPath());
 
-        // Mendapatkan email creator
-        $creatorEmail = Auth::user()->email;
         // Memeriksa setiap baris data yang diimpor
+        foreach ($data->first() as $index => $row) {
+            // Skip the header row
+            if ($index === 0) {
+                continue;
+            }
 
-        foreach ($data->first() as $row) {
-            // Jika email tidak sama dengan email creator dan belum ada di dalam $this->anggotaTimKerja, tambahkan ke daftar anggota tim kerja
-            if ($row[0] !== $creatorEmail && !$this->isEmailDuplicate($row[0])) {
+            // dd($row);
+            // Jika email tidak kosong dan belum ada di dalam $this->anggotaTimKerja, tambahkan ke daftar anggota tim kerja
+            if (!empty($row['0']) && !$this->isEmailDuplicate($row['0'])) {
                 $this->anggotaTimKerja[] = [
-                    'email' => $row[0],
-                    'nama' => $row[1], // Kolom kedua untuk nama
+                    'email' => $row['0'],
+                    'nama' => $row['1'], // Kolom kedua untuk nama
                     'role' => 'anggota', // Isi role sesuai kebutuhan
                 ];
             }
         }
         // dd($this->anggotaTimKerja);
+        // Berikan pesan sukses jika berhasil diimpor
         toast('Berhasil impor excel', 'success');
     }
+
 
     private function isEmailDuplicate($email)
     {
@@ -212,8 +227,8 @@ class BuatTimKerja extends Component
         $this->anggotaTimKerja = array_values($this->anggotaTimKerja);
 
         // Menampilkan pesan toast bahwa anggota telah dihapus
-        toast('Anggota tim kerja telah dihapus', 'success');
-        // $this->dispatchBrowserEvent('swal:success', ['message' => 'Anggota tim kerja telah dihapus!']);
+        // toast('Anggota tim kerja telah dihapus', 'success');
+        $this->dispatchBrowserEvent('swal:success', ['message' => 'Anggota tim kerja telah dihapus!']);
     }
 
     public function tambahInputAnggota()
@@ -300,19 +315,24 @@ class BuatTimKerja extends Component
 
     public function stepSelanjutnya()
     {
-        if ($this->formStep == 1) {
-            $this->validasiStep1();
-        } else if ($this->formStep == 2) {
-            // input Atasan Level 1
-            $this->atasanLevel1 = $this->jabatan[0][0]['nama_jabatan'];
-            foreach ($this->jabatan[1] as $key => $value) {
-                $this->jabatan[1][$key]['atasan'] = $this->atasanLevel1;
-            }
-            $this->jabatan[0][0]['atasan'] = null;
+        try {
+            if ($this->formStep == 1) {
+                $this->validasiStep1();
+            } else if ($this->formStep == 2) {
+                // input Atasan Level 1
+                $this->atasanLevel1 = $this->jabatan[0][0]['nama_jabatan'];
+                foreach ($this->jabatan[1] as $key => $value) {
+                    $this->jabatan[1][$key]['atasan'] = $this->atasanLevel1;
+                }
+                $this->jabatan[0][0]['atasan'] = null;
 
-            $this->validasiStep2();
+                $this->validasiStep2();
+            }
+            $this->formStep++;
+        } catch (\Exception $e) {
+            // Jika terjadi kesalahan validasi, tampilkan pesan error
+            $this->dispatchBrowserEvent('swal:warning', ['message' => $e->getMessage()]);
         }
-        $this->formStep++;
     }
 
     public function stepSebelumnya()
@@ -322,7 +342,6 @@ class BuatTimKerja extends Component
 
     public function validasiStep1()
     {
-        $this->showSuccesNotification = true;
 
         // Validasi
         $this->validate(
@@ -338,6 +357,8 @@ class BuatTimKerja extends Component
                 'anggotaTimKerja.*.role.required' => 'Role Anggota Tim kerja harus dipilih',
             ]
         );
+
+        $this->showSuccesNotification = true;
     }
 
     private function validasiStep2()
@@ -348,16 +369,30 @@ class BuatTimKerja extends Component
             'namaStruktur' => 'Isian Nama Struktur harus diisi'
         ]);
 
+        // dd($this->jabatan);
         // Additional validation for each level and jabatan
         foreach ($this->jabatan as $level => $jabatanLevel) {
             foreach ($jabatanLevel as $key => $jabatan) {
-                $this->validate([
+                $rules = [
                     "jabatan.$level.$key.nama_jabatan" => 'required|string|max:255',
-                    "jabatan.$level.$key.pejabat.*" => 'required|email',
+                ];
 
-                ], [
+                // Tambahkan aturan validasi untuk pejabat
+                if (is_array($jabatan['pejabat'])) {
+                    // Jika pejabat adalah array, setiap email harus valid
+                    foreach ($jabatan['pejabat'] as $index => $email) {
+                        $rules["jabatan.$level.$key.pejabat.$index"] = 'required|email';
+                    }
+                } else {
+                    // Jika pejabat adalah email tunggal, validasi email tunggal
+                    $rules["jabatan.$level.$key.pejabat"] = 'required|email';
+                }
+
+                // Jalankan validasi
+                $this->validate($rules, [
                     "jabatan.$level.$key.nama_jabatan.required" => 'Isian nama jabatan harus diisi',
                     "jabatan.$level.$key.pejabat.*.required" => 'Isian pejabat harus diisi',
+                    "jabatan.$level.$key.pejabat.*.email" => 'Isian pejabat harus berupa alamat email yang valid',
                 ]);
 
                 if ($level > 0) {
@@ -366,7 +401,6 @@ class BuatTimKerja extends Component
                     ], [
                         "jabatan.$level.$key.atasan.required" => 'Isian atasan harus diisi',
                     ]);
-                } else {
                 }
             }
         }

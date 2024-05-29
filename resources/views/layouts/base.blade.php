@@ -11,7 +11,7 @@
     <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
     <link rel="icon" type="image/png" href="../assets/img/360degree.png">
     <title>
-        Penilaian Kinerja 360 Derajat
+        Umpan Balik 360 Derajat
     </title>
     
 

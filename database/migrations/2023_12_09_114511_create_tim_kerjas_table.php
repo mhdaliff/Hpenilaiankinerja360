@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tim_kerjas', function (Blueprint $table) {
             $table->id();
             $table->string('nama_tim');
-            $table->string('deskripsi_tim');
+            $table->string('deskripsi_tim')->nullable();
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
