@@ -22,10 +22,10 @@
                         @else
                             <img src="../assets/img/team-4.jpg" alt="Default Image" class="w-100 border-radius-lg shadow-sm">
                         @endif
-                        <input type="file" id="image" wire:model="image" class="d-none">
+                        {{-- <input type="file" id="image" wire:model="image" class="d-none">
                         <label for="image" class="btn btn-sm btn-icon-only bg-gradient-light position-absolute bottom-0 end-0 mb-n2 me-n2">
                             <i class="fa fa-pen top-0" data-bs-toggle="tooltip" data-bs-placement="top" title="Ganti Foto"></i>
-                        </label>
+                        </label> --}}
                     </div>
                 </div>
                 <div class="col-auto my-auto">
