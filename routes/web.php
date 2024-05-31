@@ -91,10 +91,8 @@ Route::get('/auth/callback', function (Request $request) {
     // Coba ambil data pengguna dari OAuth provider
     try {
         $googleUser = Socialite::driver('google')->user();
-        // dd($googleUser);
     } catch (\Exception $e) {
         // Tangani kesalahan yang terjadi saat mengambil data pengguna
-        // Contohnya: Redirect ke halaman login dengan pesan kesalahan
         return redirect('/login')->with('error', 'Gagal mengambil data pengguna dari OAuth provider.');
     }
 
@@ -106,10 +104,9 @@ Route::get('/auth/callback', function (Request $request) {
 
     // Lakukan pengecekan apakah pengguna sudah ada di basis data Anda
     $user = User::where('email', $googleUser->email)->first();
-    // dd($user);
-    // Jika pengguna tidak ada, buat pengguna baru
 
     if (!$user) {
+        // Buat pengguna baru
         $user = User::create([
             'name' => $googleUser->name,
             'email' => $googleUser->email,
@@ -117,11 +114,17 @@ Route::get('/auth/callback', function (Request $request) {
             'photo_path' => $googleUser->avatar,
         ]);
     } else {
+        // Perbarui status jika pengguna ada tetapi statusnya 'unregistered'
         if ($user->status == 'unregistered') {
-            $ubahUser = User::findOrFail($user->id);
-            $ubahUser->status = 'registered';
-            $ubahUser->save();
+            $user->status = 'registered';
         }
+
+        // Update foto profil jika berubah
+        if ($user->photo_path !== $googleUser->avatar) {
+            $user->photo_path = $googleUser->avatar;
+        }
+
+        $user->save();
     }
 
     // Autentikasi pengguna

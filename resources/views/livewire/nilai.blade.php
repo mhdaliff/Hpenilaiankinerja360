@@ -83,12 +83,14 @@
             @endif
         @endforeach
         <!-- Tombol navigasi -->
-        <div class="d-flex justify-content-between mt-4 px-5">
-            <button wire:click="back" class="btn bg-gradient-secondary" @if($currentPage == 1) disabled @endif>Kembali</button>
+        <div class="d-flex justify-content-start mt-4 px-5 ">
+            @if($currentPage != 1)
+                <button wire:click="back" class="btn bg-gradient-secondary mx-3">Kembali</button>
+            @endif
             @if ($currentPage == $maxPage)
                 <button wire:click="save" class="btn bg-gradient-primary">Simpan</button>
             @else
-                <button wire:click="next" class="btn bg-gradient-primary">Lanjut</button>
+                <button wire:click="next" class="btn bg-gradient-primary ml-auto">Lanjut</button>
             @endif
         </div>
     </div>

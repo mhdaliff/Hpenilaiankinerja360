@@ -19,6 +19,7 @@ class Nilai extends Component
     public $idLogPenilaian;
     public $idPenilaian;
     public $idDinilai;
+    public $idPenilai;
     public $infoDinilai;
     public $daftarPertanyaan = [];
     public $indikatorPenilaian = [];
@@ -26,13 +27,19 @@ class Nilai extends Component
 
     public function mount($id)
     {
+
         $logPenilaian = LogPenilaian::where('id', $id)
             ->with('dinilai')
             ->first();
+
+        if (!$logPenilaian) {
+            Alert::warning('Error', 'Halaman tidak ditemukan!');
+            return view('components.error-page');
+        }
         $this->idLogPenilaian = $logPenilaian->id;
         $this->idDinilai = $logPenilaian->dinilai_id;
         $this->idPenilaian = $logPenilaian->penilaian_id;
-        // dd($this->idDinilai);
+        $this->idPenilai = $logPenilaian->penilai_id;
 
         $this->infoDinilai = User::where('id', $this->idDinilai)->first();
         // dd($this->infoDinilai);
@@ -154,6 +161,11 @@ class Nilai extends Component
 
     public function render()
     {
-        return view('livewire.nilai');
+        if ($this->idPenilai == auth()->user()->id) {
+            return view('livewire.nilai');
+        } else {
+            Alert::error('Error', 'Halaman tidak ditemukan!');
+            return view('components.error-page');
+        }
     }
 }

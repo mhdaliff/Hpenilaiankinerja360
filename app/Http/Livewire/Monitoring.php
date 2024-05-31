@@ -6,8 +6,9 @@ use Livewire\Component;
 use App\Models\Struktur;
 use App\Models\TimKerja;
 use App\Models\Penilaian;
-use App\Models\AnggotaTimKerja;
 use App\Models\LogPenilaian;
+use App\Models\AnggotaTimKerja;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class Monitoring extends Component
 {
@@ -36,6 +37,10 @@ class Monitoring extends Component
         $this->userRole = AnggotaTimKerja::where('user_id', auth()->user()->id)
             ->where('tim_kerja_id', $getTimKerja->id)
             ->value('role');
+
+        // dd($this->userRole);
+
+
 
         // Daftar anggota penilaian
         $this->idUser = auth()->user()->id;
@@ -72,10 +77,16 @@ class Monitoring extends Component
         $this->dataNilai['persen'] = $this->dataNilai['total'] > 0
             ? round(($this->dataNilai['sudah'] * 100) / $this->dataNilai['total'], 1)
             : 0;
+        dd($this->daftarPenilaian);
     }
 
     public function render()
     {
-        return view('livewire.monitoring');
+        if ($this->userRole == 'admin') {
+            return view('livewire.monitoring');
+        } else {
+            Alert::error('Error', 'Halaman tidak ditemukan!');
+            return view('components.error-page');
+        }
     }
 }

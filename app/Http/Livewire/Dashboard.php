@@ -85,7 +85,7 @@ class Dashboard extends Component
             ->with(['struktur.timKerja', 'pertanyaans.daftarPertanyaan.indikatorPenilaian'])
             ->get()
             ->toArray();
-        // dd($this->daftarTimKerja);
+        // dd($this->daftarPenilaian);
 
         // $this->dataChart(1);
     }

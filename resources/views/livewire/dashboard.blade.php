@@ -95,88 +95,92 @@
       </div>
       @else
       <div class="row mt-4">
-        <div class="col-lg-auto mb-4">
-          <div class="card">
-            <div class="card-header pb-0 text-center">
-              <h6>Hasil Penilaian</h6>
-              <select wire:model="selectedData" id="selectData" wire:change="changeData($event.target.value)" class="form-select">
-                <option value="0" selected>Pilih penilaian...</option>
-                @foreach ($daftarPenilaianSelesai as $penilaian)
-                    <option value="{{ $penilaian['id'] }}">{{ $penilaian['nama_penilaian'] }}</option>
-                @endforeach
-              </select>
+      @if($daftarPenilaianSelesai && !($daftarPenilaianSelesai == null ))
+      <div class="col-lg-auto mb-4">
+        <div class="card">
+          <div class="card-header pb-0 text-center">
+            <h6>Hasil Penilaian</h6>
+            <select wire:model="selectedData" id="selectData" wire:change="changeData($event.target.value)" class="form-select">
+              <option value="0" selected>Pilih penilaian...</option>
+              @foreach ($daftarPenilaianSelesai as $penilaian)
+                  <option value="{{ $penilaian['id'] }}">{{ $penilaian['nama_penilaian'] }}</option>
+              @endforeach
+            </select>
 
-            </div>
-            <div class="card-body p-3">
-              <div class="chart">
-                <canvas id="chart-radar" class="chart-canvas" height="300px"></canvas>
-              </div>
+          </div>
+          <div class="card-body p-3">
+            <div class="chart">
+              <canvas id="chart-radar" class="chart-canvas" height="300px"></canvas>
             </div>
           </div>
         </div>
-        <div class="col-lg-8 mb-4">
-          <div class="card">
-            <div class="card-header pb-0 text-center">
-              <h6>Penilaian Berlangsung</h6>
-            </div>
-            <div class="card-body p-3">
-              <div class="row">
-                <div class="col-12 col-md-12 mb-4">
-                  <div class="table-responsive">
-                      <table class="table align-items-center mb-0">
-                          <thead>
-                              <tr>
-                                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
-                                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Penilaian</th>  
-                                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Proses</th>
-                                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Batas Waktu</th>
-                                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
-                              </tr>
-                          </thead>
-                          <tbody>
-                            @foreach ($daftarPenilaian as $penilaian)
-                              <tr>
-                                <td class="align-middle">
-                                    <p class="text-center text-xs font-weight-bold mb-0">{{$loop->iteration}}</p>
-                                </td>
-                                <td>
-                                  <div class="d-flex px-2 py-1">
-                                    <a href="/penilaian/{{$penilaian['id']}}">
-                                    <div>
-                                    <div class="d-flex flex-column justify-content-center">
-                                      <h6 class="mb-0 text-xs">{{$penilaian['nama_penilaian']}}</h6>
-                                      <p class="text-xs text-secondary mb-0">{{$penilaian['struktur']['timkerja']['nama_tim']}}</p>
-                                    </div>
+      </div>
+      @endif
+      @if ($daftarPenilaian && !($daftarPenilaian == null ))
+      <div class="col-lg-8 mb-4">
+        <div class="card">
+          <div class="card-header pb-0 text-center">
+            <h6>Penilaian Berlangsung</h6>
+          </div>
+          <div class="card-body p-3">
+            <div class="row">
+              <div class="col-12 col-md-12 mb-4">
+                <div class="table-responsive">
+                    <table class="table align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">No</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Penilaian</th>  
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Proses</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Batas Waktu</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                          @foreach ($daftarPenilaian as $penilaian)
+                            <tr>
+                              <td class="align-middle">
+                                  <p class="text-center text-xs font-weight-bold mb-0">{{$loop->iteration}}</p>
+                              </td>
+                              <td>
+                                <div class="d-flex px-2 py-1">
+                                  <a href="/penilaian/{{$penilaian['id']}}">
+                                  <div>
+                                  <div class="d-flex flex-column justify-content-center">
+                                    <h6 class="mb-0 text-xs">{{$penilaian['nama_penilaian']}}</h6>
+                                    <p class="text-xs text-secondary mb-0">{{$penilaian['struktur']['timkerja']['nama_tim']}}</p>
                                   </div>
-                                  </a>
-                                </td>
-                                <td class="align-middle">
-                                  <div class="col-12 col-md-12"> 
-                                    <div class="progress-wrapper">
-                                        <div class="progress-info">
-                                          <div class="progress-percentage mb-2 text-center">
-                                            <p class="text-xs text-secondary mb-0">{{$penilaian['dataNilaiUser']['sudah']}} dari {{$penilaian['dataNilaiUser']['total']}} sudah dinilai ({{$penilaian['dataNilaiUser']['persen']}}%)</p>
-                                          </div>
-                                        </div>
-                                        <x-progress-bar :percentage="$penilaian['dataNilaiUser']['persen']" class="w-100" />
-                                    </div>
                                 </div>
-                                </td>
-                                <td class="algin middle">
-                                    <p class="text-center text-xs font-weight-bold mb-0">{{$penilaian['deadlinePenilaian']}}</p>
-                                </td>
-                                <td class="d-flex justify-content-center align-items-center mb-0 py-3">
-                                  <a href="/penilaian/{{$penilaian['id']}}" class="btn bg-gradient-danger btn-sm disable mb-0" role="button" aria-pressed="true">Nilai</a>
-                                </td>
-                              </tr>
-                            @endforeach
-                          </tbody>
-                      </table>
-                  </div>
-              </div>
+                                </a>
+                              </td>
+                              <td class="align-middle">
+                                <div class="col-12 col-md-12"> 
+                                  <div class="progress-wrapper">
+                                      <div class="progress-info">
+                                        <div class="progress-percentage mb-2 text-center">
+                                          <p class="text-xs text-secondary mb-0">{{$penilaian['dataNilaiUser']['sudah']}} dari {{$penilaian['dataNilaiUser']['total']}} sudah dinilai ({{$penilaian['dataNilaiUser']['persen']}}%)</p>
+                                        </div>
+                                      </div>
+                                      <x-progress-bar :percentage="$penilaian['dataNilaiUser']['persen']" class="w-100" />
+                                  </div>
+                              </div>
+                              </td>
+                              <td class="algin middle">
+                                  <p class="text-center text-xs font-weight-bold mb-0">{{$penilaian['deadlinePenilaian']}}</p>
+                              </td>
+                              <td class="d-flex justify-content-center align-items-center mb-0 py-3">
+                                <a href="/penilaian/{{$penilaian['id']}}" class="btn bg-gradient-danger btn-sm disable mb-0" role="button" aria-pressed="true">Nilai</a>
+                              </td>
+                            </tr>
+                          @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
           </div>
         </div>
+      </div>
+      @endif
       </div>
       @endif
     </div>

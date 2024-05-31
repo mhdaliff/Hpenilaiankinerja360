@@ -11,9 +11,8 @@ class Logout extends Component
     public function logout()
     {
         auth()->logout();
-        // Alert::success('Berhasil', 'Berhasil Keluar');
-        // Alert::warning('Warning Title', 'Warning Message');
-        toast('Berhasil Keluar', 'success');
+        Alert::success('Berhasil', 'Berhasil Keluar');
+        // toast('Berhasil Keluar', 'success');
         return redirect('/login');
     }
 

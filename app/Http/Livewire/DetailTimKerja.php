@@ -216,14 +216,19 @@ class DetailTimKerja extends Component
 
     public function render()
     {
-        // dd($this->jabatanStruktur);
-        return view('livewire.detail-tim-kerja', [
-            'infoTimKerja' => $this->infoTimKerja,
-            'daftarStruktur' => $this->daftarStruktur,
-            'selectedStruktur' => $this->selectedStruktur,
-            'jabatanStruktur' => $this->jabatanStruktur[$this->selectedStruktur] ?? [],
-            'indikatorPenilaian' => $this->indikatorPenilaian,
-            'activeTab' => $this->activeTab,
-        ]);
+
+        if (!$this->userRole) {
+            Alert::error('Error', 'Halaman tidak ditemukan!');
+            return view('components.error-page');
+        } else {
+            return view('livewire.detail-tim-kerja', [
+                'infoTimKerja' => $this->infoTimKerja,
+                'daftarStruktur' => $this->daftarStruktur,
+                'selectedStruktur' => $this->selectedStruktur,
+                'jabatanStruktur' => $this->jabatanStruktur[$this->selectedStruktur] ?? [],
+                'indikatorPenilaian' => $this->indikatorPenilaian,
+                'activeTab' => $this->activeTab,
+            ]);
+        }
     }
 }

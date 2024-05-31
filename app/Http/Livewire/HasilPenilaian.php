@@ -4,11 +4,15 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\LogNilai;
+use App\Models\Struktur;
+use App\Models\TimKerja;
 use App\Models\Penilaian;
 use App\Models\LogPenilaian;
+use App\Models\AnggotaTimKerja;
 use App\Models\IndikatorPenilaian;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\HasilPenilaianExport;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class HasilPenilaian extends Component
 {
@@ -27,11 +31,24 @@ class HasilPenilaian extends Component
             ]
         ]
     ];
+    public $userRole;
 
     public $infoNilai = [];
 
     public function mount($id)
     {
+        $this->idPenilaian = $id;
+        $this->infoPenilaian = Penilaian::findOrFail($id);
+
+        // dd($this->infoPenilaian);
+        $getStruktur = Struktur::where('id', $this->infoPenilaian->struktur_id)->first();
+        $getTimKerja = TimKerja::where('id', $getStruktur->tim_kerja_id)->first();
+
+        // Identifikasi Role User
+        $this->userRole = AnggotaTimKerja::where('user_id', auth()->user()->id)
+            ->where('tim_kerja_id', $getTimKerja->id)
+            ->value('role');
+
         $this->idPenilaian = $id;
         $this->infoPenilaian = Penilaian::findOrFail($id)
             ->toArray();
@@ -173,6 +190,11 @@ class HasilPenilaian extends Component
 
     public function render()
     {
-        return view('livewire.hasil-penilaian');
+        if ($this->userRole == 'admin') {
+            return view('livewire.hasil-penilaian');
+        } else {
+            Alert::error('Error', 'Halaman tidak ditemukan!');
+            return view('components.error-page');
+        }
     }
 }

@@ -167,7 +167,6 @@ class BuatTimKerja extends Component
     {
         $templatePath = 'public/templates/template_anggota_tim_kerja.xlsx';
         $templateFile = Storage::path($templatePath);
-        dd($templateFile);
 
         return response()->download($templateFile, 'template_anggota_tim_kerja.xlsx');
     }
