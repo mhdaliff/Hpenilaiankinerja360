@@ -88,7 +88,7 @@
                 <button wire:click="back" class="btn bg-gradient-secondary mx-3">Kembali</button>
             @endif
             @if ($currentPage == $maxPage)
-                <button wire:click="save" class="btn bg-gradient-primary">Simpan</button>
+                <button wire:click="confirmSave" class="btn bg-gradient-primary">Simpan</button>
             @else
                 <button wire:click="next" class="btn bg-gradient-primary ml-auto">Lanjut</button>
             @endif
@@ -96,6 +96,7 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // // Fungsi untuk menangkap nilai yang dipilih oleh pengguna
     document.addEventListener('change', function (event) {
@@ -116,14 +117,28 @@
     });
 
     document.addEventListener('livewire:load', function () {
-            @this.on('showToast', (message, type) => {
-                toast(message, type);
+        window.addEventListener('confirm-save', event => {
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Data penilaian yang telah dinilai tidak bisa diedit lagi!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ea0606',
+                cancelButtonColor: '#252f40',
+                confirmButtonText: 'Ya, simpan!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    @this.save();
+                }
             });
         });
 
-    document.addEventListener('DOMContentLoaded', function () {
+        @this.on('showToast', (message, type) => {
+            toast(message, type);
+        });
+
         window.addEventListener('swal:warning', event => {
-            swal("warning", event.detail.message, "warning");
+            Swal.fire("Warning", event.detail.message, "warning");
         });
     });
 </script>

@@ -3,7 +3,8 @@
         <div class="row align-items-center justify-content-lg-between">
             <div class="col-lg-6 mb-lg-0 mb-4">
                 <div class="copyright text-center text-sm text-muted text-lg-left">
-                    COPYRIGT © {{ now()->year }} by <a style="color: #252f40;" href="https://www.creative-tim.com" class="font-weight-bold ml-1"
+                    COPYRIGT © {{ now()->year }} by <a style="color: #252f40;" href="https://www.instagram.com/polstatstis/" class="font-weight-bold ml-1"
+                    target="_blank">Polstat STIS</a> & <a style="color: #252f40;" href="https://www.instagram.com/mhdalif_farhan/" class="font-weight-bold ml-1"
                         target="_blank">M Alif Farhan</a>
             </div>
             {{-- <div class="col-lg-6">

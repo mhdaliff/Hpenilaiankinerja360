@@ -122,11 +122,16 @@ class Nilai extends Component
         return true;
     }
 
-    public function save()
+    public function confirmSave()
     {
         if (!$this->validateInputs()) {
             return;
         }
+        $this->dispatchBrowserEvent('confirm-save');
+    }
+
+    public function save()
+    {
 
         foreach ($this->indikatorPenilaian as $indikator) {
             foreach ($indikator[0] as $pertanyaan) {
@@ -141,9 +146,7 @@ class Nilai extends Component
         $logPenilaian->status = 'sudah';
         $logPenilaian->save();
 
-        // toast('Penilaian berhasil', 'success');
         Alert::success('Berhasil', 'Kuesioner penilaian berhasil disimpan!');
-
         return redirect()->route('detail-penilaian', ['id' => $this->idPenilaian]);
     }
 

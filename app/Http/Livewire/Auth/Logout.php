@@ -8,12 +8,20 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class Logout extends Component
 {
+    public function confirmLogout()
+    {
+        $this->dispatchBrowserEvent('confirm-logout');
+    }
     public function logout()
     {
-        auth()->logout();
-        Alert::success('Berhasil', 'Berhasil Keluar');
-        // toast('Berhasil Keluar', 'success');
-        return redirect('/login');
+        if (auth()->check()) {
+            auth()->logout();
+            Alert::success('Berhasil', 'Berhasil Keluar');
+            return redirect('/login');
+        } else {
+            // Jika tidak ada pengguna yang login, langsung redirect ke halaman login
+            return redirect('/login');
+        }
     }
 
     public function render()

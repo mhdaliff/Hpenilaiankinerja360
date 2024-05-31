@@ -20,11 +20,7 @@
                         </a>
                     </li>
                     <li class="nav-item pe-3 d-flex align-items-center">
-                        <a class="dropdown-item border-radius-md" data-bs-toggle="modal" data-bs-target="#exampleModal" >
-                            <i  class="fa fa-sign-out me-sm-1 text-danger">
-                            </i>
-                            <span class="d-sm-inline d-none text-danger">Keluar</span>
-                        </a>
+                        <livewire:auth.logout />
                     </li>
                     <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
                         <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
@@ -37,41 +33,6 @@
                     </li>
                 </ul>
             </div>
-
-            <!-- Modal -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h6 class="modal-title" id="modal-title-notification">Perhatian!</h6>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">×</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                        <div class="py-3 text-center">
-                          <i class="ni ni-bell-55 ni-3x"></i>
-                          <h4 class="text-gradient text-danger mt-4">Keluar</h4>
-                          <p>Apakah anda yakin ingin keluar?</p>
-                        </div>
-                      </div>
-                      <div class="modal-footer">
-                        <livewire:auth.logout />
-                        <button type="button" class="btn btn-dark text-white ml-auto" data-bs-dismiss="modal">Batal</button>
-                      </div>
-                    </div>
-            </div>
-            {{-- <ul>
-                <li class="mb-2">
-                    <a class="dropdown-item border-radius-md"
-                        href="{{ route('user-profile') }}">
-                        <span class="d-sm-inline d-none">Profil Pengguna</span>
-                    </a>
-                </li>
-                <li class="mb-2">
-                    <livewire:auth.logout />
-                </li>
-            </ul> --}}
                     
             {{-- <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4 d-flex justify-content-end" id="navbar">
                 <ul class="navbar-nav justify-content-end">
@@ -195,4 +156,5 @@
             </div> --}}
         </div>
     </nav>
+    
 

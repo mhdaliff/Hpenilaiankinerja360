@@ -30,7 +30,7 @@ class HasilPenilaianExport implements FromCollection, WithHeadings, ShouldAutoSi
         foreach ($this->daftarIndikator as $indikator) {
             $headerRow[] = $indikator['nama'];
         }
-        $headerRow[] = 'Total';
+        $headerRow[] = 'Rata-rata';
         $data[] = $headerRow;
         // dd($data);
 
