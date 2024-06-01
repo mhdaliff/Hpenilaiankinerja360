@@ -16,6 +16,7 @@ class Nilai extends Component
 {
     public $currentPage = 1; // Halaman saat ini
     public $maxPage; // Jumlah maksimum halaman
+    public $logPenilaian;
     public $idLogPenilaian;
     public $idPenilaian;
     public $idDinilai;
@@ -28,18 +29,18 @@ class Nilai extends Component
     public function mount($id)
     {
 
-        $logPenilaian = LogPenilaian::where('id', $id)
+        $this->logPenilaian = LogPenilaian::where('id', $id)
             ->with('dinilai')
             ->first();
 
-        if (!$logPenilaian) {
+        if (!$this->logPenilaian) {
             Alert::warning('Error', 'Halaman tidak ditemukan!');
             return view('components.error-page');
         }
-        $this->idLogPenilaian = $logPenilaian->id;
-        $this->idDinilai = $logPenilaian->dinilai_id;
-        $this->idPenilaian = $logPenilaian->penilaian_id;
-        $this->idPenilai = $logPenilaian->penilai_id;
+        $this->idLogPenilaian = $this->logPenilaian->id;
+        $this->idDinilai = $this->logPenilaian->dinilai_id;
+        $this->idPenilaian = $this->logPenilaian->penilaian_id;
+        $this->idPenilai = $this->logPenilaian->penilai_id;
 
         $this->infoDinilai = User::where('id', $this->idDinilai)->first();
         // dd($this->infoDinilai);
@@ -164,7 +165,7 @@ class Nilai extends Component
 
     public function render()
     {
-        if ($this->idPenilai == auth()->user()->id) {
+        if (($this->idPenilai == auth()->user()->id) && ($this->logPenilaian->status == 'belum')) {
             return view('livewire.nilai');
         } else {
             Alert::error('Error', 'Halaman tidak ditemukan!');
