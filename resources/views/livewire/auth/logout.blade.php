@@ -1,7 +1,9 @@
+
+
 <a class="dropdown-item border-radius-md" wire:click="confirmLogout">
-  <i  class="fa fa-sign-out me-sm-1 text-danger">
+  <i  class="fa fa-sign-out me-sm-1">
   </i>
-  <span class="d-sm-inline d-none text-danger">Keluar</span>
+  <span class="d-sm-inline d-none">Keluar</span>
 </a>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

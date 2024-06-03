@@ -97,9 +97,15 @@
                                                                 @endif
                                                             </div>
                                                             <div class="col-12 col-md-12">
-                                                                <a href="javascript:;" class="card-description text-darker">
+                                                                @if($dinilai->status == 'belum')
+                                                                    <a href="{{ route('nilai', ['id' => $dinilai->id]) }}" class="card-description text-darker">
+                                                                        <small> {{ $dinilai->dinilai->name }} </small>
+                                                                    </a>
+                                                                @else
+                                                                <a class="card-description text-darker">
                                                                     <small> {{ $dinilai->dinilai->name }} </small>
                                                                 </a>
+                                                                @endif
                                                             </div>
                                                         </div>
                                                     </div>

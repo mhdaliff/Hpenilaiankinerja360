@@ -77,7 +77,6 @@ class Monitoring extends Component
         $this->dataNilai['persen'] = $this->dataNilai['total'] > 0
             ? round(($this->dataNilai['sudah'] * 100) / $this->dataNilai['total'], 1)
             : 0;
-        dd($this->daftarPenilaian);
     }
 
     public function render()

@@ -55,7 +55,7 @@ class DaftarMonitoring extends Component
         // dd($strukturIds);
 
         $penilaians = Penilaian::whereIn('struktur_id', $strukturIds)
-            ->where('waktu_selesai', '>', now()) // Memeriksa waktu selesai lebih besar dari waktu saat ini
+            ->where('waktu_selesai', '>=', now()->setTimezone('Asia/Jakarta')->startOfDay()) // Memeriksa waktu selesai lebih besar dari waktu saat ini
             ->orderBy('waktu_selesai', 'asc')
             ->limit(4)
             ->with('struktur.timKerja')

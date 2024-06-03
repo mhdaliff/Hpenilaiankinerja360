@@ -43,7 +43,7 @@ class Dashboard extends Component
 
         // Penilaian berlangsung
         $this->daftarPenilaian = Penilaian::whereIn('struktur_id', $strukturIds)
-            ->where('waktu_selesai', '>', now())
+            ->where('waktu_selesai', '>=', now()->setTimezone('Asia/Jakarta')->startOfDay())
             ->with('struktur.timkerja')
             ->get()
             ->toArray();
@@ -81,7 +81,7 @@ class Dashboard extends Component
 
         // Query untuk Grafik Hasil Penilaian
         $this->daftarPenilaianSelesai = Penilaian::whereIn('struktur_id', $strukturIds)
-            ->where('waktu_selesai', '<=', now())
+            ->where('waktu_selesai', '<', now()->setTimezone('Asia/Jakarta')->startOfDay())
             ->with(['struktur.timKerja', 'pertanyaans.daftarPertanyaan.indikatorPenilaian'])
             ->get()
             ->toArray();
