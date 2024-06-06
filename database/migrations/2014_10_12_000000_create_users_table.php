@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->enum('status', ['registered', 'unregistered'])->default('unregistered');
-            $table->string('photo_path')->nullable();
+            $table->text('photo_path')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

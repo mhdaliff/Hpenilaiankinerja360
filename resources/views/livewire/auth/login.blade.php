@@ -6,7 +6,8 @@
                     <div class="card card-plain mt-8">
                         <div class="card-header pb-0 text-left bg-transparent">
                             <h3 class="font-weight-bolder text-warning text-gradient">{{ __('Selamat Datang !') }}</h3>
-                            <p class="mb-0">{{ __('di Sistem Umpan Balik 360 Derajat')}}<br></p>
+                            <p class="mb-0">{{ __('di Sistem ')}} <a class="font-weight-bolder text-warning text-gradient">{{ __('Umpan Balik 360 Derajat ')}}</a><br></p>
+                            
                         </div>
                         <div class="card-body">
                             <form wire:submit.prevent="login" action="#" method="POST" role="form text-left">

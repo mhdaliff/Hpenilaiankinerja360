@@ -117,6 +117,7 @@ Route::get('/auth/callback', function (Request $request) {
         // Perbarui status jika pengguna ada tetapi statusnya 'unregistered'
         if ($user->status == 'unregistered') {
             $user->status = 'registered';
+            $user->name = $googleUser->name;
         }
 
         // Update foto profil jika berubah

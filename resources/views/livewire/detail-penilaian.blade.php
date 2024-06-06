@@ -18,7 +18,7 @@
                                 <h4 class=" font-weight-bolder">{{$infoPenilaian['nama_penilaian']}}</h4>
                             </div>
                             @if ($userRole == 'admin')
-                                <a href="/monitoring/{{$idPenilaian}}" class="btn bg-gradient-primary btn-sm position-absolute top-0 end-0" type="button">Monitoring</a>
+                                <a href="/edit-penilaian/{{$idPenilaian}}" class="btn bg-gradient-primary btn-sm position-absolute top-0 end-0" type="button">Edit Penilaian</a>
                             @endif
                         </div>
                     </div>
