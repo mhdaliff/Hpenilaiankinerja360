@@ -141,7 +141,6 @@ class BuatPenilaian extends Component
 
     public function save()
     {
-        // dd($this->indikatorPenilaian);
 
         // Validasi step 2
         $this->validateStep2();
@@ -151,7 +150,6 @@ class BuatPenilaian extends Component
             'nama_penilaian' => $this->penilaian['namaPenilaian'],
             'struktur_id' => $this->penilaian['struktur'],
             'maks_responden' => $this->penilaian['maks-responden'],
-            // 'metode' => $this->penilaian['metode'],
             'waktu_mulai' => $this->penilaian['mulai'],
             'waktu_selesai' => $this->penilaian['selesai'],
         ]);
@@ -173,8 +171,6 @@ class BuatPenilaian extends Component
 
         // Reset data penilaian
         $this->resetPenilaianData();
-
-        // Redirect atau tampilkan pesan sukses
     }
 
     private function addLogPenilaian($idPenilaian)
@@ -286,7 +282,6 @@ class BuatPenilaian extends Component
         $finalLogPenilaianData = [];
 
         foreach ($groupedLogPenilaian as $penilai_id => $logPenilaian) {
-            // dd($logPenilaian);
             // Pisahkan log dengan role_penilai 'diri sendiri'
             $diriSendiriLog = $logPenilaian->where('role_penilai', 'diri sendiri');
             $otherLogs = $logPenilaian->where('role_penilai', '!=', 'diri sendiri');
@@ -307,8 +302,6 @@ class BuatPenilaian extends Component
             // Gabungkan data yang sudah difilter ke dalam array finalLogPenilaianData
             $finalLogPenilaianData = array_merge($finalLogPenilaianData, $logPenilaian->toArray());
         }
-
-        // dd($finalLogPenilaianData);
         // Batch insert data LogPenilaian ke dalam database
         LogPenilaian::insert($finalLogPenilaianData);
     }

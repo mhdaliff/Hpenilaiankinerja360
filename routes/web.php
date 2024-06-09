@@ -9,9 +9,10 @@ use Illuminate\Http\Request;
 use App\Http\Livewire\Tables;
 use App\Http\Livewire\Billing;
 use App\Http\Livewire\Profile;
+use App\Models\AnggotaTimKerja;
 use App\Http\Livewire\Dashboard;
-use App\Http\Livewire\Auth\Login;
 
+use App\Http\Livewire\Auth\Login;
 use App\Http\Livewire\Monitoring;
 use App\Http\Livewire\Auth\SignUp;
 use App\Http\Livewire\CreateGroup;
@@ -130,6 +131,16 @@ Route::get('/auth/callback', function (Request $request) {
 
     // Autentikasi pengguna
     Auth::login($user);
+
+
+    $userRole = AnggotaTimKerja::where('user_id', $user->id)
+        ->where('role', 'admin')
+        ->first();
+    if ($userRole) {
+        session(['role' => 'admin']);
+    } else {
+        session(['role' => 'anggota']);
+    }
 
     return redirect('/dasbor');
 });
