@@ -57,7 +57,7 @@ class HasilPenilaian extends Component
         $this->infoPenilaian['sebaya'] = 35;
         $this->infoPenilaian['bawahan'] = 25;
         $this->infoPenilaian['diriSendiri'] = 0;
-        $this->infoPenilaian['metode'] = '';
+        $this->infoPenilaian['metode'] = 'aritmatika';
         $this->infoPenilaian['jumlahIndikator'] = 0;
 
         // dd($this->infoPenilaian);
@@ -116,6 +116,7 @@ class HasilPenilaian extends Component
             $totalNilai = [];
             $totalInputan = [];
 
+            // Perulangan untuk mengumpulkan total nilai dan total inputan per indikator
             foreach ($dinilai as $daftarNilai) {
                 foreach ($daftarNilai->logNilai as $logNilai) {
                     $indikatorId = $logNilai->pertanyaan->daftarPertanyaan->indikator_penilaian_id;
@@ -147,6 +148,7 @@ class HasilPenilaian extends Component
                     'id' => $indikatorId,
                     'nilai_akhir' => $rataRataNilai,
                     'total_nilai' => $totalNilai[$indikator],
+                    'jumlah_penilai' => $totalInputan[$indikator],
                 ];
             }
 
@@ -160,6 +162,7 @@ class HasilPenilaian extends Component
             // Memasukkan data dinilai ke dalam array Nilai
             $this->Nilai[] = $dataDinilai;
         }
+        // dd($this->Nilai);
 
         // Menghitung nilai rata-rata total untuk tiap-tiap indikator terhadap semua dinilai
         $rataRataTotalIndikator = [];
@@ -179,7 +182,6 @@ class HasilPenilaian extends Component
         $this->infoNilai['rerata_total'] = round($rataRataTotalSemua, 1);
 
         // dd($this->daftarIndikator);
-        // dd($this->infoNilai);
     }
 
     public function exportExcel()

@@ -2,12 +2,14 @@
 
 namespace App\Http\Livewire;
 
+use Carbon\Carbon;
 use App\Models\User;
 use Livewire\Component;
 use App\Models\LogNilai;
+use App\Models\Penilaian;
 use App\Models\Pertanyaan;
-use App\Models\LogPenilaian;
 
+use App\Models\LogPenilaian;
 use App\Models\DaftarPertanyaan;
 use function Laravel\Prompts\select;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -22,6 +24,7 @@ class Nilai extends Component
     public $idDinilai;
     public $idPenilai;
     public $infoDinilai;
+    public $infoPenilaian;
     public $daftarPertanyaan = [];
     public $indikatorPenilaian = [];
     public $errors = [];
@@ -41,6 +44,14 @@ class Nilai extends Component
         $this->idDinilai = $this->logPenilaian->dinilai_id;
         $this->idPenilaian = $this->logPenilaian->penilaian_id;
         $this->idPenilai = $this->logPenilaian->penilai_id;
+
+        $this->infoPenilaian = Penilaian::where('id', $this->idPenilaian)->first();
+        $time = now()->setTimezone('Asia/Jakarta')->startOfDay();
+        // dd($time);
+        if (Carbon::parse($this->infoPenilaian->waktu_selesai) < $time) {
+            Alert::error('Error', 'Waktu penilaian telah berakhir!');
+            return redirect()->route('detail-penilaian', ['id' => $this->idPenilaian]);
+        }
 
         $this->infoDinilai = User::where('id', $this->idDinilai)->first();
         // dd($this->infoDinilai);

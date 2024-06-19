@@ -28,7 +28,7 @@
                               <label for="metode" class="form-label">Metode</label>
                               <div class="input-group mb-3">
                                 <select wire:model="infoPenilaian.metode" class="form-select" id="metode">
-                                  <option value="aritmatika" selected>Aritmatika</option>
+                                  <option value="aritmatika">Aritmatika</option>
                                   <option value="proporsional">Proporsional</option>
                                 </select>
                                 <a href="#" class="btn bg-gradient-warning mb-0">Perbarui</a>

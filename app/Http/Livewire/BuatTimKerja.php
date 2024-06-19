@@ -419,7 +419,6 @@ class BuatTimKerja extends Component
 
     public function saveTimKerja()
     {
-        // dd($this->indikatorPenilaian);
         // Validasi data sebelum menyimpan
         $this->validateData();
 
@@ -430,7 +429,6 @@ class BuatTimKerja extends Component
             'user_id' => auth()->id(),
         ]);
 
-        // dd($this->anggotaTimKerja);
         foreach ($this->anggotaTimKerja as $anggota) {
             // Memeriksa apakah user sudah ada berdasarkan email
             $user = User::where('email', $anggota['email'])->first();
@@ -495,7 +493,6 @@ class BuatTimKerja extends Component
                     }
                 } else {
                     $pejabat = User::where('email', $jabatanItem['pejabat'])->first();
-                    // dd($pejabat->anggotaTimKerja->where('user_id', $pejabat->id)->where('tim_kerja_id', $timKerja->id));
                     if ($pejabat) {
                         // Jika pejabat ditemukan, simpan data AnggotaStruktur
                         AnggotaStruktur::create([

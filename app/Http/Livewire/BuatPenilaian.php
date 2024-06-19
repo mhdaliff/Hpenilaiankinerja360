@@ -141,7 +141,6 @@ class BuatPenilaian extends Component
 
     public function save()
     {
-
         // Validasi step 2
         $this->validateStep2();
 
@@ -178,7 +177,6 @@ class BuatPenilaian extends Component
         $logPenilaianData = []; // Variabel untuk mengumpulkan data LogPenilaian
 
         $jabatanStruktur = JabatanStruktur::where('struktur_id', $this->penilaian['struktur'])->get();
-        // dd($jabatanStruktur);
         foreach ($jabatanStruktur as $key => $jabatan) {
             $anggotaStruktur = AnggotaStruktur::where('jabatan_struktur_id', $jabatan->id)->with('anggotaTimKerja')->get();
 
@@ -276,7 +274,6 @@ class BuatPenilaian extends Component
         }
         // Kelompokkan data berdasarkan penilai_id
         $groupedLogPenilaian = collect($logPenilaianData)->groupBy('penilai_id');
-        // dd($groupedLogPenilaian);
         $maks_responden = $this->penilaian['maks-responden'];
 
         $finalLogPenilaianData = [];
@@ -305,8 +302,6 @@ class BuatPenilaian extends Component
         // Batch insert data LogPenilaian ke dalam database
         LogPenilaian::insert($finalLogPenilaianData);
     }
-
-
 
     private function resetPenilaianData()
     {

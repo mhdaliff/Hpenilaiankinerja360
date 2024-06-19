@@ -43,7 +43,22 @@ class DaftarMonitoring extends Component
             $this->dataPenilaian($idTimKerja);
         }
 
+        $this->shortPenilaian();
         // dd($this->daftarPenilaian);
+    }
+
+    public function shortPenilaian()
+    {
+        // Shorting Data
+        $this->daftarPenilaian = $this->daftarPenilaian->sort(function ($a, $b) {
+            if ($a->jarakDeadline >= 0 && $b->jarakDeadline >= 0) {
+                return $a->jarakDeadline <=> $b->jarakDeadline;
+            } elseif ($a->jarakDeadline < 0 && $b->jarakDeadline < 0) {
+                return $b->jarakDeadline <=> $a->jarakDeadline;
+            } else {
+                return $a->jarakDeadline >= 0 ? -1 : 1;
+            }
+        })->values();
     }
 
     public function dataPenilaian($idTimKerja)
@@ -55,22 +70,22 @@ class DaftarMonitoring extends Component
         // dd($strukturIds);
 
         $penilaians = Penilaian::whereIn('struktur_id', $strukturIds)
-            ->where('waktu_selesai', '>=', now()->setTimezone('Asia/Jakarta')->startOfDay()) // Memeriksa waktu selesai lebih besar dari waktu saat ini
+            // ->where('waktu_selesai', '>=', now()->setTimezone('Asia/Jakarta')->startOfDay()) // Memeriksa waktu selesai lebih besar dari waktu saat ini
             ->orderBy('waktu_selesai', 'asc')
-            ->limit(4)
+            // ->limit(4)
             ->with('struktur.timKerja')
             ->get()
             ->map(function ($penilaian) {
                 $penilaian->telahDinilai = LogPenilaian::where('penilaian_id', $penilaian->id)
-                    ->where('penilai_id', auth()->user()->id)
                     ->where('status', 'sudah')
                     ->count();
 
                 $penilaian->totalDinilai = LogPenilaian::where('penilaian_id', $penilaian->id)
-                    ->where('penilai_id', auth()->user()->id)
                     ->count();
 
                 $penilaian->jarakDeadline = Carbon::now()->diffInDays(Carbon::parse($penilaian->waktu_selesai), false);
+
+                $penilaian->persen = $penilaian->totalDinilai > 0 ? round(($penilaian->telahDinilai * 100) / $penilaian->totalDinilai, 1) : 0;
 
                 return $penilaian;
             });

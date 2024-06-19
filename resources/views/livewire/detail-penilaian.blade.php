@@ -17,13 +17,21 @@
                             <div class="container-fluid text-center">
                                 <h4 class=" font-weight-bolder">{{$infoPenilaian['nama_penilaian']}}</h4>
                             </div>
-                            @if ($userRole == 'admin')
-                                <a href="/edit-penilaian/{{$idPenilaian}}" class="btn bg-gradient-primary btn-sm position-absolute top-0 end-0" type="button">Edit Penilaian</a>
-                            @endif
                         </div>
                     </div>
                     <div class="card-body px-2 pt-0 pb-2">
                         <div class="row justify-content-center">
+                            @if ($userRole == 'admin')   
+                            <div class="col-12 col-md-4">
+                                <a href="/monitoring/{{$idPenilaian}}"class="btn bg-gradient-info w-100" type="button">Monitoring</a>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <a href="/hasil-penilaian/{{$idPenilaian}}"class="btn bg-gradient-success w-100" type="button">Hasil Penilaian</a>
+                            </div>      
+                            <div class="col-12 col-md-4 mb-5">
+                                <a href="/edit-penilaian/{{$idPenilaian}}"class="btn bg-gradient-primary w-100" type="button">Edit Penilaian</a>
+                            </div>
+                            @endif
                             <div class="col-12 col-md-8 px-3 mb-5"> 
                                 <div class="progress-wrapper">
                                     <div class="progress-info">

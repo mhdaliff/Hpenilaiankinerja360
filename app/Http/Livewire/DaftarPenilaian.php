@@ -41,7 +41,23 @@ class DaftarPenilaian extends Component
         foreach ($this->daftarIdTimKerja as $idTimKerja) {
             $this->dataPenilaian($idTimKerja);
         }
-        // dd($this->daftarPenilaian);
+
+        $this->shortPenilaian();
+    }
+
+    public function shortPenilaian()
+    {
+        // Shorting data dengan jarakDeadline positif paling dekat dengan nol dari kecil ke besar,
+        // baru kemudian jarakDeadline negatif dari mendekati nol hingga terkecil
+        $this->daftarPenilaian = $this->daftarPenilaian->sort(function ($a, $b) {
+            if ($a->jarakDeadline >= 0 && $b->jarakDeadline >= 0) {
+                return $a->jarakDeadline <=> $b->jarakDeadline;
+            } elseif ($a->jarakDeadline < 0 && $b->jarakDeadline < 0) {
+                return $b->jarakDeadline <=> $a->jarakDeadline;
+            } else {
+                return $a->jarakDeadline >= 0 ? -1 : 1;
+            }
+        })->values();
     }
 
     public function dataPenilaian($idTimKerja)
@@ -53,8 +69,8 @@ class DaftarPenilaian extends Component
         // dd($strukturIds);
 
         $penilaians = Penilaian::whereIn('struktur_id', $strukturIds)
-            ->where('waktu_selesai', '>=', now()->setTimezone('Asia/Jakarta')->startOfDay()) // Memeriksa waktu selesai lebih besar dari waktu saat ini
-            ->orderBy('waktu_selesai', 'asc')
+            // ->where('waktu_selesai', '>=', now()->setTimezone('Asia/Jakarta')->startOfDay()) // Memeriksa waktu selesai lebih besar dari waktu saat ini
+            // ->orderBy('waktu_selesai', 'desc')
             ->limit(4)
             ->with('struktur.timKerja')
             ->get()
