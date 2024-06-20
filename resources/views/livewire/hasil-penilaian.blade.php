@@ -31,7 +31,7 @@
                                   <option value="aritmatika">Aritmatika</option>
                                   <option value="proporsional">Proporsional</option>
                                 </select>
-                                <a href="#" class="btn bg-gradient-warning mb-0">Perbarui</a>
+                                <a wire:click='nilaiAkhir' class="btn bg-gradient-warning mb-0">Perbarui</a>
                               </div>
                               
                             </div>
@@ -134,3 +134,14 @@
       </div>
   </div>
 </div>
+<script>
+
+  document.addEventListener('livewire:load', function () {
+      window.addEventListener('swal:warning', event => {
+          Swal.fire("Warning", event.detail.message, "warning");
+      });
+      window.addEventListener('swal:success', event => {
+          Swal.fire("Success", event.detail.message, "success");
+      });
+  });
+</script>
