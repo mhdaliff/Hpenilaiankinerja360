@@ -48,31 +48,31 @@
                         @foreach ($indikator['0'] as $index => $pertanyaan)
                             <div class="col-md-12 px-4">
                                 <h6 class="text-start px-4">{{ $pertanyaan['pertanyaan'] }}</h6>
-                                <div class="card card-body mb-5 flex-1 flex p-2 text-black dark:text-gray-400 bg-gray-100 dark:bg-gray-700">
-                                    <div class="row">
-                                        <div class="col-4 col-md-2">
-                                            <p class="text-end py-3">Sangat tidak baik</p>
+                                <div class="card card-body mb-5 p-2 text-black dark:text-gray-400 bg-gray-100 dark:bg-gray-700">
+                                    <div class="row pt-2">
+                                        <div class="col-12 col-sm-4 col-md-3">
+                                            <p class="text-center py-3">Sangat tidak baik</p>
                                         </div>
-                                        <div class="col-8 col-md-8">
+                                        <div class="col-auto col-sm-4 col-md-6">
                                             <div class="row justify-content-center">
-                                                @for ($i = 1; $i <= 10; $i++)
-                                                <div class="col-md-1">
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                <div class="col-2 col-md-2 justify-content-center">
                                                     <div class="row">
-                                                        <div class="col-md-12">
+                                                        <div class="col-12 col-sm-12 col-md-12">
                                                             <div class="form-check form-check-inline">
                                                                 <input wire:model="indikatorPenilaian.{{ $key }}.0.{{ $index }}.nilai" class="form-check-input" type="radio" id="nilai_{{ $key }}_{{ $index }}_{{ $i }}" value="{{ $i }}">
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-12">
-                                                            <label class="form-check-label" for="nilai_{{ $loop->parent->index }}_{{ $i }}">{{ $i }}</label>
+                                                        <div class="col-12 col-sm-12 col-md-12 ms-1">
+                                                                <label class="form-check-label" for="nilai_{{ $loop->parent->index }}_{{ $i }}">{{ $i }}</label>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 @endfor
                                             </div>
                                         </div>
-                                        <div class="col-4 col-md-2">
-                                            <p class="text-start py-3">Sangat baik</p>
+                                        <div class="col-12 col-sm-4 col-md-3">
+                                            <p class="text-center py-3">Sangat baik</p>
                                         </div>
                                     </div>
                                 </div>

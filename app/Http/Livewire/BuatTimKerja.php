@@ -146,9 +146,6 @@ class BuatTimKerja extends Component
         ]
     ];
 
-
-
-
     public function mount()
     {
         $userEmail = Auth::user()->email;

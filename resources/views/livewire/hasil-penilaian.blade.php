@@ -26,24 +26,20 @@
                           <div class="row">
                             <div class="col-md-12 mb-2">
                               <label for="metode" class="form-label">Metode</label>
-                              <div class="input-group mb-3">
                                 <select wire:model="infoPenilaian.metode" class="form-select" id="metode">
                                   <option value="aritmatika">Aritmatika</option>
                                   <option value="proporsional">Proporsional</option>
                                 </select>
-                                <a wire:click='nilaiAkhir' class="btn bg-gradient-warning mb-0">Perbarui</a>
-                              </div>
-                              
                             </div>
                           </div>
                           @if ($infoPenilaian['metode'] == 'proporsional')
-                            <div class="row">
+                            <div class="row mb-2">
                               <div class="col-md-3">
                                 <label for="atasan" class="form-label">Atasan</label>
                                 <input wire:model="infoPenilaian.atasan" type="number" min="0" class="form-control" id="atasan">
                               </div>
                               <div class="col-md-3">
-                                <label for="sebaya" class="form-label">Sebaya</label>
+                                <label for="sebaya" class="form-label">Rekan Sejawat</label>
                                 <input wire:model="infoPenilaian.sebaya" type="number" min="0" class="form-control" id="sebaya">
                               </div>
                               <div class="col-md-3">
@@ -56,10 +52,21 @@
                               </div>
                             </div>
                           @endif
+                          <div class="col-12 col-md-12">
+                            <a wire:click='nilaiAkhir' class="btn bg-gradient-warning mb-0">Perbarui</a>
+                          </div>
+                      </div>
+                      <div class="col-12 col-md-12 mb-2">
+                        <h6 class="text-center">Tabel Nilai Akhir</h6>
                       </div>
                       <div class="d-flex flex-row justify-content-between position-relative mb-4">
-                        <div class="container-fluid text-center">
-                          <h6 class="text-center">Tabel Nilai Akhir</h6>
+                        <div class="d-flex justify-content-start">
+                          <select wire:model="infoPenilaian.filter" class="form-select" id="metode">
+                            <option value="semua">Semua</option>
+                            <option value="atasan">Atasan</option>
+                            <option value="sejawat">Rekan sejawat</option>
+                            <option value="bawahan">Bawahan</option>
+                          </select>
                         </div>
                         <button wire:click="exportExcel" class="btn bg-gradient-success btn-sm position-absolute top-0 end-0">Export Data</button>
                       

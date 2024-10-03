@@ -332,3 +332,21 @@ class BuatPenilaian extends Component
         ]);
     }
 }
+
+// kelompokkan data berdasarkan penilai_id
+// tetapkan maks_responden
+
+// buat finalLogPenilaianData sebagai array kosong
+
+// untuk setiap grup logPenilaian berdasarkan penilai_id:
+//     pisahkan log dengan role_penilai 'diri sendiri'
+//     pisahkan log lainnya
+    
+//     jika jumlah log > maks_responden:
+//         jika ada log 'diri sendiri':
+//             ambil sampel acak dari log lainnya sebanyak maks_responden - 1
+//             gabungkan log 'diri sendiri' dengan sampel acak lainnya
+//         jika tidak ada log 'diri sendiri':
+//             ambil sampel acak sebanyak maks_responden
+    
+//     gabungkan log yang sudah difilter ke finalLogPenilaianData
