@@ -5,8 +5,9 @@
                 <div class="col-xl-4 col-lg-5 col-md-6 d-flex flex-column mx-auto">
                     <div class="card card-plain mt-8">
                         <div class="card-header pb-0 text-left bg-transparent">
-                            <h3 class="font-weight-bolder text-warning text-gradient">{{ __('Selamat Datang !') }}</h3>
-                            <p class="mb-0">{{ __('di Sistem ')}} <a class="font-weight-bolder text-warning text-gradient">{{ __('Umpan Balik 360 Derajat ')}}</a><br></p>
+                            <h3 class="font-weight-bolder text-warning text-gradient">{{ __('Umpan Balik 360 Derajat') }}</h3>
+                            <p class="mb-0">{{ __('Evaluasi kinerja tim secara menyeluruh dengan satu aplikasi, solusi mudah untuk penilaian akurat dan pengembangan profesional yang lebih baik!')}}
+                            </p>
                             
                         </div>
                         <div class="card-body">
@@ -51,7 +52,7 @@
                             <p class="mb-4 text-sm mx-auto text-center">
                                 {{ __(' Belum punya akun?') }}
                                 <a href="{{ route('sign-up') }}"
-                                    class="text-warning text-gradient font-weight-bold">{{ __('Daftar') }}</a>
+                                    class="text-warning text-gradient font-weight-bold">{{ __('Daftar di sini') }}</a>
                             </p>
                         </div>
                         {{-- <div class="card-footer text-center mt-0 pt-0 px-lg-2 px-1">

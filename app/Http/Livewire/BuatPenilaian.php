@@ -14,6 +14,7 @@ use App\Models\AnggotaTimKerja;
 use App\Models\JabatanStruktur;
 use App\Models\DaftarPertanyaan;
 use App\Models\IndikatorPenilaian;
+use Illuminate\Support\Facades\Mail;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class BuatPenilaian extends Component
@@ -23,6 +24,7 @@ class BuatPenilaian extends Component
     public $daftarTimKerja;
     public $daftarIdTimKerja;
     public $penilaian = [
+        'nama_timKerja' => '',
         'timKerja' => '',
         'namaPenilaian' => '',
         'deskripsiPenilaian' => '',
@@ -141,32 +143,35 @@ class BuatPenilaian extends Component
 
     public function save()
     {
-        // Validasi step 2
-        $this->validateStep2();
+        // // Validasi step 2
+        // $this->validateStep2();
 
-        // Simpan data ke database
-        $penilaian = Penilaian::create([
-            'nama_penilaian' => $this->penilaian['namaPenilaian'],
-            'struktur_id' => $this->penilaian['struktur'],
-            'maks_responden' => $this->penilaian['maks-responden'],
-            'waktu_mulai' => $this->penilaian['mulai'],
-            'waktu_selesai' => $this->penilaian['selesai'],
-        ]);
+        // // Simpan data ke database
+        // $penilaian = Penilaian::create([
+        //     'nama_penilaian' => $this->penilaian['namaPenilaian'],
+        //     'struktur_id' => $this->penilaian['struktur'],
+        //     'maks_responden' => $this->penilaian['maks-responden'],
+        //     'waktu_mulai' => $this->penilaian['mulai'],
+        //     'waktu_selesai' => $this->penilaian['selesai'],
+        // ]);
 
-        foreach ($this->indikatorPenilaian as $indikator) {
-            foreach ($indikator['pertanyaans'] as $pertanyaan) {
-                if ($pertanyaan['status_check'] == 'checked') {
-                    Pertanyaan::create([
-                        'penilaian_id' => $penilaian->id,
-                        'daftar_pertanyaan_id' => $pertanyaan['id_pertanyaan'],
-                    ]);
-                }
-            }
-        }
+        // foreach ($this->indikatorPenilaian as $indikator) {
+        //     foreach ($indikator['pertanyaans'] as $pertanyaan) {
+        //         if ($pertanyaan['status_check'] == 'checked') {
+        //             Pertanyaan::create([
+        //                 'penilaian_id' => $penilaian->id,
+        //                 'daftar_pertanyaan_id' => $pertanyaan['id_pertanyaan'],
+        //             ]);
+        //         }
+        //     }
+        // }
 
-        // Tambahkan log penilaian
-        $this->addLogPenilaian($penilaian->id);
+        // // Tambahkan log penilaian
+        // $this->addLogPenilaian($penilaian->id);
         Alert::success('Berhasil', 'Berhasil Membuat Penilaian');
+
+        // Kirim Email ke peserta penilaian
+        $this->penilaianMail();
 
         // Reset data penilaian
         $this->resetPenilaianData();
@@ -301,6 +306,20 @@ class BuatPenilaian extends Component
         }
         // Batch insert data LogPenilaian ke dalam database
         LogPenilaian::insert($finalLogPenilaianData);
+    }
+
+    private function penilaianMail()
+    {
+        $penilaianDetails = [
+            'nama_penilaian' => $this->penilaian['namaPenilaian'],
+            'tim_kerja' => $this->penilaian['timKerja'],
+            'tanggal_mulai' => $this->penilaian['mulai'],
+            'tanggal_selesai' => $this->penilaian['selesai'],
+            'link' => 'www.umpanbalik360derajat.my.id/login'
+        ];
+
+        // Mengirim email ke satu penerima
+        Mail::to('mhdaliffarhan22@gmail.com')->send(new \App\Mail\PenilaianNotification($penilaianDetails));
     }
 
     private function resetPenilaianData()

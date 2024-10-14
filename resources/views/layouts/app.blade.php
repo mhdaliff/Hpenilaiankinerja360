@@ -17,7 +17,7 @@
     @guest
         {{-- If the user is on the login page --}}
         @if (!auth()->check() && in_array(request()->route()->getName(),['login'],))
-            @include('layouts.navbars.guest.login')
+            {{-- @include('layouts.navbars.guest.login') --}}
             {{ $slot }}
             <div class="mt-5">
                 @include('layouts.footers.auth.footer')
