@@ -314,6 +314,8 @@ class BuatTimKerja extends Component
         try {
             if ($this->formStep == 1) {
                 $this->validasiStep1();
+                // Short berdasarkan nama
+                $this->anggotaTimKerja = collect($this->anggotaTimKerja)->sortBy('nama')->values()->toArray();
             } else if ($this->formStep == 2) {
                 // input Atasan Level 1
                 $this->atasanLevel1 = $this->jabatan[0][0]['nama_jabatan'];
@@ -321,7 +323,6 @@ class BuatTimKerja extends Component
                     $this->jabatan[1][$key]['atasan'] = $this->atasanLevel1;
                 }
                 $this->jabatan[0][0]['atasan'] = null;
-
                 $this->validasiStep2();
             }
             $this->formStep++;

@@ -38,7 +38,7 @@
                         <!-- Form Langkah 2-->
                         <div class="card-body px-0 pt-0 pb-2">
                             <div class="row">
-                                @include('components.form-indikator-Penilaian')
+                                @include('components.form-indikator-penilaian')
                                 <div class="d-flex flex-row justify-content-between">
                                     <button wire:click="stepSebelumnya" class="btn bg-gradient-primary">Kembali</button>
                                     <button wire:click="save" class="btn bg-gradient-primary">Buat Penilaian</button>

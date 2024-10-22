@@ -21,6 +21,7 @@
                       <div class="col-12 col-md-12 mb-4">
                           <h5 class="text-center">Hasil Penilaian</h5>
                       </div>
+                      <!-- FITUR METODE -->
                       <div class="col-12 col-md-12 px-3 mb-5">
                           <h6 class="text-center">Metode Penentuan Nilai Akhir</h6>
                           <div class="row">
@@ -56,18 +57,19 @@
                             <a wire:click='nilaiAkhir' class="btn bg-gradient-warning mb-0">Perbarui</a>
                           </div>
                       </div>
+                      <!-- AKHIR FITUR METODE NILAI AKHIR -->
                       <div class="col-12 col-md-12 mb-2">
                         <h6 class="text-center">Tabel Nilai Akhir</h6>
                       </div>
                       <div class="d-flex flex-row justify-content-between position-relative mb-4">
-                        <div class="d-flex justify-content-start">
+                        {{-- <div class="d-flex justify-content-start">
                           <select wire:model="infoPenilaian.filter" class="form-select" id="metode">
                             <option value="semua">Semua</option>
                             <option value="atasan">Atasan</option>
                             <option value="sejawat">Rekan sejawat</option>
                             <option value="bawahan">Bawahan</option>
                           </select>
-                        </div>
+                        </div> --}}
                         <button wire:click="exportExcel" class="btn bg-gradient-success btn-sm position-absolute top-0 end-0">Export Data</button>
                       
                       </div>
